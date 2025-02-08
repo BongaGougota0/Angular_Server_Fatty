@@ -2,18 +2,16 @@ package za.co.burgerfatty.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.Date;
 
 @Data
 @Table(name = "product")
 @Entity
-public class Product
-{
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Integer productId;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false, insertable=false, updatable=false)
