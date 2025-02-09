@@ -2,6 +2,8 @@ package za.co.burgerfatty.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -10,7 +12,7 @@ import java.util.Date;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "product_id")
     private Integer productId;
 
     @ManyToOne
@@ -23,7 +25,7 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "product_description")
     private String description;
 
     @Column(name = "unit_price")
@@ -32,17 +34,17 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "active")
+    @Column(name = "active_status")
     private String active;
 
     @Column(name = "units_in_stock")
     private int unitsInStock;
 
     @Column(name = "date_created")
-    private Date dateCreated;
+    private LocalDateTime dateCreated;
 
     @Column(name = "last_updated")
-    private Date lastUpdated;
+    private LocalDateTime lastUpdated;
 
     @Column(name = "category_id")
     private int categoryId;

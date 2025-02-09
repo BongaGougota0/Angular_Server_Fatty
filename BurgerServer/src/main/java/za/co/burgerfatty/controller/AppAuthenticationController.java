@@ -11,10 +11,10 @@ import za.co.burgerfatty.service.BurgerAuthenticationService;
 
 @RestController
 @RequestMapping(path = "auth/")
-public class BurgerAuthenticationController {
+public class AppAuthenticationController {
     private final BurgerAuthenticationService burgerAuthenticationService;
 
-    public BurgerAuthenticationController(BurgerAuthenticationService burgerAuthenticationService) {
+    public AppAuthenticationController(BurgerAuthenticationService burgerAuthenticationService) {
         this.burgerAuthenticationService = burgerAuthenticationService;
     }
 
