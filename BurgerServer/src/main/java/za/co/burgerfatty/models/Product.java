@@ -2,9 +2,7 @@ package za.co.burgerfatty.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Table(name = "product")

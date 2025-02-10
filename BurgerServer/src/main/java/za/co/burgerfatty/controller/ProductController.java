@@ -1,10 +1,13 @@
 package za.co.burgerfatty.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import za.co.burgerfatty.dto.CarouselItemDto;
 import za.co.burgerfatty.dto.ProductDto;
 import za.co.burgerfatty.service.ProductService;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/products/")
@@ -43,5 +46,11 @@ public class ProductController {
     @DeleteMapping("{productId}")
     public ResponseEntity<ProductDto> deleteProduct(@PathVariable("productId") String productId) {
         return ResponseEntity.ok().body(productService.deleteProductById(Integer.valueOf(productId)));
+    }
+
+    @GetMapping("/ui-data")
+    public ResponseEntity<Map<String, List<CarouselItemDto>>> getUiData() {
+        Map<String, List<CarouselItemDto>> uiDataForTemplate = productService.getUITemplateData();
+        return new ResponseEntity<>(uiDataForTemplate, HttpStatus.OK);
     }
 }

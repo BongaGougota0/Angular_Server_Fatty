@@ -1,12 +1,16 @@
 package za.co.burgerfatty.service;
 
 import org.springframework.stereotype.Service;
+import za.co.burgerfatty.dto.CarouselItemDto;
 import za.co.burgerfatty.dto.ProductDto;
 import za.co.burgerfatty.exception.ProductNotFound;
 import za.co.burgerfatty.models.Product;
 import za.co.burgerfatty.repositories.ProductRepo;
+import za.co.burgerfatty.util.Util;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,6 +71,16 @@ public class ProductService {
         } catch (RuntimeException | ProductNotFound e) {
                 throw new RuntimeException(e);
         }
+    }
+
+    public Map<String, List<CarouselItemDto>> getUITemplateData(){
+        Map<String, List<CarouselItemDto>> uiData = new HashMap<>();
+        uiData.put("section_one_data", productRepo.findAll().stream()
+                .map(Util::createUIItem).limit(2).collect(Collectors.toList()));
+
+        uiData.put("carousel_items", productRepo.findAll().stream()
+                .map(Util::createUIItem).limit(3).collect(Collectors.toList()));
+        return uiData;
     }
 
     public ProductDto createProduct(Product product) {
