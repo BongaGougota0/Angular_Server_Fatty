@@ -14,13 +14,13 @@ public class Product {
     private Integer productId;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false, insertable=false, updatable=false)
+    @JoinColumn(name = "category_id", nullable = false, updatable=false)
     private ProductCategory category;
 
     @Column(name = "sku")
     private String sku;
 
-    @Column(name = "name")
+    @Column(name = "product_name")
     private String name;
 
     @Column(name = "product_description")
@@ -44,6 +44,4 @@ public class Product {
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
 
-    @Column(name = "category_id")
-    private int categoryId;
 }

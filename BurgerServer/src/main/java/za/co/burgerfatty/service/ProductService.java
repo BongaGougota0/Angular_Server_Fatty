@@ -5,6 +5,7 @@ import za.co.burgerfatty.dto.CarouselItemDto;
 import za.co.burgerfatty.dto.ProductDto;
 import za.co.burgerfatty.exception.ProductNotFound;
 import za.co.burgerfatty.models.Product;
+import za.co.burgerfatty.models.ProductCategory;
 import za.co.burgerfatty.repositories.ProductRepo;
 import za.co.burgerfatty.util.Util;
 import java.time.LocalDateTime;
@@ -16,18 +17,24 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepo productRepo;
+    private final ProductCategoryService productCategoryService;
 
-    public ProductService(ProductRepo productRepo) {
+    public ProductService(ProductRepo productRepo, ProductCategoryService productCategoryService) {
         this.productRepo = productRepo;
+        this.productCategoryService = productCategoryService;
     }
 
     public ProductDto newProduct(ProductDto productDto) {
         Product product = new Product();
-        product.setName(product.getName());
-        product.setCategory(product.getCategory());
-        product.setSku(product.getSku());
-        product.setUnitPrice(product.getUnitPrice());
-        product.setDescription(product.getDescription());
+        product.setName(productDto.getProductName());
+        ProductCategory category = productCategoryService.getProductCategories()
+                .stream().filter(productCategory ->
+                        productCategory.getCategoryName().equalsIgnoreCase(productDto.getProductCategory())).findFirst().get();
+        product.setCategory(category);
+        product.setSku("");
+        product.setUnitPrice(productDto.getProductPrice());
+        product.setDescription(productDto.getProductDescription());
+        product.setImageUrl(productDto.getProductUrl());
         product.setDateCreated(LocalDateTime.now());
         product.setLastUpdated(LocalDateTime.now());
         productRepo.save(product);
