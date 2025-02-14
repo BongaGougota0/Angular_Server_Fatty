@@ -3,7 +3,9 @@ package za.co.burgerfatty.service;
 import org.springframework.stereotype.Service;
 import za.co.burgerfatty.dto.AuthenticationResponseDto;
 import za.co.burgerfatty.dto.LoginCredentialsDto;
+import za.co.burgerfatty.models.BurgerUser;
 import za.co.burgerfatty.repositories.BurgerUserRepo;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 @Service
 public class BurgerAuthenticationService {
@@ -13,7 +15,14 @@ public class BurgerAuthenticationService {
         this.burgerUserRepo = burgerUserRepo;
     }
 
-    public AuthenticationResponseDto signIn(LoginCredentialsDto loginCredentials) {
-        return new AuthenticationResponseDto();
+    public BurgerUser getUserbyEmail(String email) {
+        try{
+            return burgerUserRepo.findUserByEmail(email).orElseThrow(
+                    () -> new UserPrincipalNotFoundException("")
+            );
+        }catch (Exception e) {
+            throw new RuntimeException("");
+        }
     }
+
 }

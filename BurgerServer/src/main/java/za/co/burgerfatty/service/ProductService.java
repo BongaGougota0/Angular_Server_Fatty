@@ -3,6 +3,7 @@ package za.co.burgerfatty.service;
 import org.springframework.stereotype.Service;
 import za.co.burgerfatty.dto.CarouselItemDto;
 import za.co.burgerfatty.dto.ProductDto;
+import za.co.burgerfatty.exception.CategoryNotFound;
 import za.co.burgerfatty.exception.ProductNotFound;
 import za.co.burgerfatty.models.Product;
 import za.co.burgerfatty.models.ProductCategory;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+    public static String PRODUCT_NOT_FOUND = "Product with id %d not found";
     private final ProductRepo productRepo;
     private final ProductCategoryService productCategoryService;
 
@@ -25,11 +27,13 @@ public class ProductService {
     }
 
     public ProductDto newProduct(ProductDto productDto) {
-        Product product = new Product();
-        product.setName(productDto.getProductName());
         ProductCategory category = productCategoryService.getProductCategories()
                 .stream().filter(productCategory ->
-                        productCategory.getCategoryName().equalsIgnoreCase(productDto.getProductCategory())).findFirst().get();
+                        productCategory.getCategoryName().equalsIgnoreCase(productDto.getProductCategory()))
+                .findFirst()
+                .orElseThrow(() -> new CategoryNotFound("Product category not found"));
+        Product product = new Product();
+        product.setName(productDto.getProductName());
         product.setCategory(category);
         product.setSku("");
         product.setUnitPrice(productDto.getProductPrice());
@@ -42,12 +46,9 @@ public class ProductService {
     }
 
     public ProductDto getProductById(Integer productId) {
-        try{
-            Product product = productRepo.findById(productId).orElseThrow(ProductNotFound::new);
-            return createProduct(product);
-        } catch (RuntimeException | ProductNotFound e) {
-            throw new RuntimeException(e);
-        }
+                Product product = productRepo.findById(productId)
+                        .orElseThrow(() -> new ProductNotFound(String.format(PRODUCT_NOT_FOUND, productId)));
+        return createProduct(product);
     }
 
     public List<ProductDto> getAllProducts() {
@@ -56,28 +57,17 @@ public class ProductService {
     }
 
     public ProductDto updateProduct(ProductDto productDto) {
-        try{
-            Product product = productRepo.findById(productDto.getProductId())
-                    .orElseThrow(ProductNotFound::new);
-            product.setName(product.getName());
-            product.setUnitPrice(productDto.getProductPrice());
-            product.setDescription(productDto.getProductDescription());
-            product.setLastUpdated(LocalDateTime.now());
-            productRepo.save(product);
-            return createProduct(product);
-        } catch (ProductNotFound productNotFound) {
-            throw new RuntimeException(productNotFound.getMessage());
-        }
+        Product product = productRepo.findById(productDto.getProductId())
+                .map(existingProduct -> updateProduct(existingProduct, productDto))
+                .orElseThrow(() -> new ProductNotFound(String.format(PRODUCT_NOT_FOUND, productDto.getProductId())));
+        return createProduct(product);
     }
 
     public ProductDto deleteProductById(Integer productId) {
-        try {
-            Product product = productRepo.findById(productId).orElseThrow(ProductNotFound::new);
-            productRepo.deleteById(productId);
-            return createProduct(product);
-        } catch (RuntimeException | ProductNotFound e) {
-                throw new RuntimeException(e);
-        }
+        Product product = productRepo.findById(productId).orElseThrow(
+                () -> new ProductNotFound(String.format(PRODUCT_NOT_FOUND, productId)));
+        productRepo.deleteById(productId);
+        return createProduct(product);
     }
 
     public Map<String, List<CarouselItemDto>> getUITemplateData(){
@@ -94,5 +84,14 @@ public class ProductService {
         return new ProductDto(product.getProductId(), product.getCategory().getCategoryName(),
                 product.getName(), product.getDescription(), product.getUnitPrice(),
                 product.getImageUrl(), product.getImageUrl());
+    }
+
+    private Product updateProduct(Product existingProduct, ProductDto productDto) {
+        existingProduct.setName(productDto.getProductName());
+        existingProduct.setUnitPrice(productDto.getProductPrice());
+        existingProduct.setDescription(productDto.getProductDescription());
+        existingProduct.setImageUrl(productDto.getProductUrl());
+        existingProduct.setLastUpdated(LocalDateTime.now());
+        return productRepo.save(existingProduct);
     }
 }
