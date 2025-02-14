@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import za.co.burgerfatty.dto.AuthenticationResponseDto;
 import za.co.burgerfatty.dto.LoginCredentialsDto;
+import za.co.burgerfatty.models.BurgerUser;
 import za.co.burgerfatty.service.BurgerAuthenticationService;
 
 @RestController
@@ -19,8 +19,8 @@ public class AppAuthenticationController {
     }
 
     @PostMapping("sign-in")
-    public ResponseEntity<AuthenticationResponseDto> signin(@RequestBody LoginCredentialsDto loginCredentialsDto) {
-        AuthenticationResponseDto authenticationResponseDto = burgerAuthenticationService.signIn(loginCredentialsDto);
+    public ResponseEntity<BurgerUser> signin(@RequestBody LoginCredentialsDto loginCredentialsDto) {
+        BurgerUser authenticationResponseDto = burgerAuthenticationService.getUserByEmail(loginCredentialsDto.getEmail());
         return ResponseEntity.ok(authenticationResponseDto);
     }
 }

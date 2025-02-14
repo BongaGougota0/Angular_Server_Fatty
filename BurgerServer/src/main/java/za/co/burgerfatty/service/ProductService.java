@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     public static String PRODUCT_NOT_FOUND = "Product with id %d not found";
+    public static String INVALID_PRODUCT_CATEGORY = "Invalid product category name %s";
     private final ProductRepo productRepo;
     private final ProductCategoryService productCategoryService;
 
@@ -53,6 +54,16 @@ public class ProductService {
 
     public List<ProductDto> getAllProducts() {
         return productRepo.findAll().stream().map(this::createProduct)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductDto> getProductsByCategory(String category) {
+        if(!isCategoryValid(category)){
+            throw new CategoryNotFound(category);
+        }
+        return productRepo.findProductsByCategoryCategoryNameEqualsIgnoreCase(category)
+                .stream()
+                .map(this::createProduct)
                 .collect(Collectors.toList());
     }
 
@@ -93,5 +104,16 @@ public class ProductService {
         existingProduct.setImageUrl(productDto.getProductUrl());
         existingProduct.setLastUpdated(LocalDateTime.now());
         return productRepo.save(existingProduct);
+    }
+
+    private boolean isCategoryValid(String category) {
+        if(productCategoryService.getProductCategories() != null){
+            productCategoryService.getProductCategories().stream()
+                    .filter(productCategory -> productCategory.getCategoryName().equalsIgnoreCase(category))
+                    .findFirst()
+                    .orElseThrow(() -> new CategoryNotFound(String.format(INVALID_PRODUCT_CATEGORY, category)));
+            return true;
+        }
+        return false;
     }
 }

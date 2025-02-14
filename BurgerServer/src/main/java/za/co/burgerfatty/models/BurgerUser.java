@@ -22,7 +22,4 @@ public class BurgerUser {
     @Column(name = "user_password")
     private String password;
 
-    public BurgerUser orElseThrow(Exception exception) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
