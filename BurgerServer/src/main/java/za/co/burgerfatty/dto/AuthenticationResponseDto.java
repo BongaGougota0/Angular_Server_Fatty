@@ -1,4 +1,4 @@
 package za.co.burgerfatty.dto;
 
-public class AuthenticationResponseDto {
+public record AuthenticationResponseDto(String username, String token, String role) {
 }

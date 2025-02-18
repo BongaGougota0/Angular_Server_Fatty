@@ -19,6 +19,8 @@ public class BurgerUser {
     private String email;
     @Column(name = "phone")
     private String phone;
+    @Column(name = "role")
+    private String role;
     @Column(name = "user_password")
     private String password;
 
