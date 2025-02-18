@@ -51,8 +51,8 @@ public class ProductController {
         return ResponseEntity.ok(productDto);
     }
 
-    @DeleteMapping("{productId}")
-    public ResponseEntity<ProductDto> deleteProduct(@PathVariable("productId") String productId) {
+    @DeleteMapping("delete")
+    public ResponseEntity<ProductDto> deleteProduct(@RequestParam("productId") String productId) {
         return ResponseEntity.ok().body(productService.deleteProductById(Integer.valueOf(productId)));
     }
 

@@ -6,19 +6,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import za.co.burgerfatty.models.BurgerUser;
-import za.co.burgerfatty.service.BurgerUsersService;
+import za.co.burgerfatty.repositories.BurgerUserRepo;
 
 @Service
 public class UserDetailsImpService implements UserDetailsService {
-    private final BurgerUsersService burgerUsersService;
+    private final BurgerUserRepo burgerUserRepo;
 
-    public UserDetailsImpService(BurgerUsersService burgerUsersService) {
-        this.burgerUsersService = burgerUsersService;
+    public UserDetailsImpService(BurgerUserRepo burgerUserRepo) {
+        this.burgerUserRepo = burgerUserRepo;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        BurgerUser user = burgerUsersService.getUserByEmail(username);
+        BurgerUser user = burgerUserRepo.findUserByEmail(username).get();
         if(user != null) {
             return User.builder()
                     .username(username)

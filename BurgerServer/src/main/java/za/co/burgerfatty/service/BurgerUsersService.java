@@ -22,8 +22,10 @@ public class BurgerUsersService {
             return false;
         }
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        return burgerUserRepo.findUserByEmail(newUser.getEmail())
-                .isEmpty() ? burgerUserRepo.save(newUser) != null : false;
+        if (burgerUserRepo.findUserByEmail(newUser.getEmail())
+                .isPresent()) return false;
+        burgerUserRepo.save(newUser);
+        return true;
     }
 
     public BurgerUser getUserByEmail(String userEmail) {

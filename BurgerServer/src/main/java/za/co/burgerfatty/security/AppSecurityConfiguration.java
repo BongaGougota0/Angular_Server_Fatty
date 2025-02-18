@@ -22,7 +22,7 @@ public class AppSecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
 
-    public AppSecurityConfiguration(final JwtAuthenticationFilter jwtAuthenticationFilter,
+    public AppSecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter,
                                     UserDetailsService userDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
@@ -33,8 +33,19 @@ public class AppSecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/api/authenticate/").permitAll();
-                    registry.requestMatchers("/api/register/").permitAll();
+                    registry.requestMatchers(
+                            "/api/authenticate",
+                            "/api/users/register",
+                            "/api/products/**").permitAll();
+                    registry.requestMatchers(
+                            "/api/products/post" ,
+                            "/api/products/update",
+                            "/api/products/patch",
+                            "/api/products/delete").hasRole("ADMIN");
+                    registry.requestMatchers(
+                            "/api/my-cart",
+                            "/api/my-wishlist",
+                            "/api/checkout").authenticated();
                     registry.anyRequest().authenticated();
                 })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
