@@ -12,8 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/products/", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin(origins = {"http://localhost:4200","http://localhost:5000"},
-methods = {RequestMethod.GET, RequestMethod.POST})
 public class ProductController {
     private final ProductService productService;
 

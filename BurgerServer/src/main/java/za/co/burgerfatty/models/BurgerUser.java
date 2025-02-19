@@ -2,7 +2,6 @@ package za.co.burgerfatty.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 
 @Data
 @Table(name = "users")
