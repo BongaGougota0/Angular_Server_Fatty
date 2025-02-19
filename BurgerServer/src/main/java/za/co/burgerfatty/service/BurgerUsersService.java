@@ -21,9 +21,9 @@ public class BurgerUsersService {
         if (newUser == null || newUser.getEmail() == null) {
             return false;
         }
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         if (burgerUserRepo.findUserByEmail(newUser.getEmail())
                 .isPresent()) return false;
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         burgerUserRepo.save(newUser);
         return true;
     }

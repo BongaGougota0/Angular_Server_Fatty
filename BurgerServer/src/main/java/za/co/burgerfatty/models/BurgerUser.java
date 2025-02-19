@@ -2,6 +2,7 @@ package za.co.burgerfatty.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 
 @Data
 @Table(name = "users")
@@ -20,7 +21,7 @@ public class BurgerUser {
     @Column(name = "phone")
     private String phone;
     @Column(name = "role")
-    private String role;
+    private String role = "USER";
     @Column(name = "user_password")
     private String password;
 

@@ -1,5 +1,6 @@
 package za.co.burgerfatty.controller;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,12 @@ public class UsersController {
 
     @PostMapping("register")
     public ResponseEntity<SuccessResponse> registerNewUser(@RequestBody BurgerUser newUser) {
-        burgerUsersService.createNewUser(newUser);
-        return ResponseEntity.ok(new SuccessResponse("New User created", LocalDateTime.now()));
+        if(burgerUsersService.createNewUser(newUser)){
+            return new ResponseEntity(new SuccessResponse("New User created", LocalDateTime.now()),
+                    HttpStatusCode.valueOf(200));
+        }else{
+            return new ResponseEntity(new SuccessResponse("User already exists", LocalDateTime.now()),
+                    HttpStatusCode.valueOf(403));
+        }
     }
 }

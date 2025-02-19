@@ -9,7 +9,6 @@ import za.co.burgerfatty.dto.ErrorResponseDto;
 import za.co.burgerfatty.exception.CategoryNotFound;
 import za.co.burgerfatty.exception.ProductNotFound;
 import za.co.burgerfatty.exception.UserNotFound;
-
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -40,6 +39,7 @@ public class AppExceptionHandler {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto();
         errorResponseDto.setMessage(exception.getMessage());
         errorResponseDto.setTimestamp(LocalDateTime.now());
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
+        errorResponseDto.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
+        return ResponseEntity.ok(errorResponseDto);
     }
 }

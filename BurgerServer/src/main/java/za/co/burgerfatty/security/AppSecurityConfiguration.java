@@ -36,6 +36,7 @@ public class AppSecurityConfiguration {
                     registry.requestMatchers(
                             "/api/authenticate",
                             "/api/users/register",
+                            "/api/users/ui-data",
                             "/api/products/**").permitAll();
                     registry.requestMatchers(
                             "/api/products/post" ,
@@ -45,6 +46,7 @@ public class AppSecurityConfiguration {
                     registry.requestMatchers(
                             "/api/my-cart",
                             "/api/my-wishlist",
+                            "/api/order",
                             "/api/checkout").authenticated();
                     registry.anyRequest().authenticated();
                 })
