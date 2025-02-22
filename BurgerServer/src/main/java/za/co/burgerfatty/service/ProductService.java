@@ -28,13 +28,14 @@ public class ProductService {
     }
 
     public ProductDto newProduct(ProductDto productDto) {
-        ProductCategory category = productCategoryService.getProductCategories()
-                .stream().filter(productCategory ->
-                        productCategory.getCategoryName().equalsIgnoreCase(productDto.getProductCategory()))
-                .findFirst()
-                .orElseThrow(() -> new CategoryNotFound("Product category not found"));
+        isCategoryValid(productDto.getProductCategory());
         Product product = new Product();
         product.setName(productDto.getProductName());
+        ProductCategory category = productCategoryService.getProductCategories()
+                .stream().filter(
+                        productCategory -> productCategory.getCategoryName()
+                                .equalsIgnoreCase(productDto.getProductCategory()))
+                .findFirst().get();
         product.setCategory(category);
         product.setSku("");
         product.setUnitPrice(productDto.getProductPrice());
