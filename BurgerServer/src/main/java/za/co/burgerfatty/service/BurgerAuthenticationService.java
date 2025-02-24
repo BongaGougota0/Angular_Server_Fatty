@@ -17,8 +17,8 @@ public class BurgerAuthenticationService {
     }
 
     public boolean authenticate(LoginCredentialsDto loginCredentials) {
-        BurgerUser user = burgerUsersService.getUserByEmail(loginCredentials.getEmail());
-        if (user != null && passwordEncoder.matches(loginCredentials.getPassword(), user.getPassword())) {
+        BurgerUser user = burgerUsersService.getUserByEmail(loginCredentials.email());
+        if (user != null && passwordEncoder.matches(loginCredentials.password(), user.getPassword())) {
             return true;
         }
         return false;

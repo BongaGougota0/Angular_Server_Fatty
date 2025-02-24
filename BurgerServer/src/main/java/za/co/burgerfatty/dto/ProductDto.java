@@ -13,4 +13,5 @@ public class ProductDto {
     double productPrice;
     String productImage;
     String productUrl;
+    int productCount;
 }

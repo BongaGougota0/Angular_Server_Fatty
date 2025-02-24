@@ -2,7 +2,6 @@ package za.co.burgerfatty.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +27,9 @@ public class AppAuthenticationController {
     }
 
     @PostMapping("authenticate")
-    public ResponseEntity<AuthenticationResponseDto> authenticateUser(@Validated @RequestBody LoginCredentialsDto loginCredentialsDto) {
+    public ResponseEntity<AuthenticationResponseDto> authenticateUser(@RequestBody LoginCredentialsDto loginCredentialsDto) {
         if(burgerAuthenticationService.authenticate(loginCredentialsDto)){
-            String token = jwtService.generateToken(userDetailsService.loadUserByUsername(loginCredentialsDto.getEmail()));
+            String token = jwtService.generateToken(userDetailsService.loadUserByUsername(loginCredentialsDto.email()));
             String username = jwtService.extractUsername(token);
             String role = burgerAuthenticationService.burgerUsersService.getUserByEmail(username).getRole();
             return ResponseEntity.ok(new AuthenticationResponseDto(username,token, role));

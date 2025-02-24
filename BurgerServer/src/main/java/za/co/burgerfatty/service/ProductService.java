@@ -95,7 +95,7 @@ public class ProductService {
     public ProductDto createProduct(Product product) {
         return new ProductDto(product.getProductId(), product.getCategory().getCategoryName(),
                 product.getName(), product.getDescription(), product.getUnitPrice(),
-                product.getImageUrl(), product.getImageUrl());
+                product.getImageUrl(), product.getImageUrl(), 1);
     }
 
     private Product updateProduct(Product existingProduct, ProductDto productDto) {
