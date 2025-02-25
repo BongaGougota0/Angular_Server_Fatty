@@ -14,6 +14,7 @@ import za.co.burgerfatty.repositories.BurgerUserRepo;
 @AllArgsConstructor
 public class AddressService {
     private static final String ADDRESS_NOT_FOUND = "Address with id %s not found";
+    private static final String USER_NOT_FOUND = "User with email %s not found";
 
     private final AddressRepository addressRepository;
     private final BurgerUserRepo burgerUserRepo;
@@ -28,7 +29,7 @@ public class AddressService {
 
     private BurgerUser getExistingUser(String userEmailFromDto) {
         return burgerUserRepo.findUserByEmail(userEmailFromDto)
-                .orElseThrow( () -> new UserNotFound(String.format(ADDRESS_NOT_FOUND, userEmailFromDto)));
+                .orElseThrow( () -> new UserNotFound(String.format(USER_NOT_FOUND, userEmailFromDto)));
     }
 
     private Address mapToAddress(AddressDto addressDto) {
