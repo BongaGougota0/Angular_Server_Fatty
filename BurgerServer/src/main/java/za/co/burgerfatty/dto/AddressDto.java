@@ -9,4 +9,5 @@ public class AddressDto {
     private String city;
     private String province;
     private String zip;
+    private String userEmail;
 }

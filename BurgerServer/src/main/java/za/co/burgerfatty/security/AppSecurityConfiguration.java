@@ -48,7 +48,8 @@ public class AppSecurityConfiguration {
                             "/api/my-wishlist",
                             "/api/products/place-order",
                             "/api/checkout",
-                            "/api/orders**").authenticated();
+                            "/api/orders**",
+                            "/api/address**").authenticated();
                     registry.anyRequest().authenticated();
                 })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
