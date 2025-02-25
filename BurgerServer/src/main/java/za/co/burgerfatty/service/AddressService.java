@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.burgerfatty.dto.AddressDto;
 import za.co.burgerfatty.exception.AddressNotFound;
+import za.co.burgerfatty.exception.UserNotFound;
 import za.co.burgerfatty.models.Address;
 import za.co.burgerfatty.models.BurgerUser;
 import za.co.burgerfatty.repositories.AddressRepository;
@@ -27,7 +28,7 @@ public class AddressService {
 
     private BurgerUser getExistingUser(String userEmailFromDto) {
         return burgerUserRepo.findUserByEmail(userEmailFromDto)
-                .orElseThrow( () -> new AddressNotFound(String.format(ADDRESS_NOT_FOUND, userEmailFromDto)));
+                .orElseThrow( () -> new UserNotFound(String.format(ADDRESS_NOT_FOUND, userEmailFromDto)));
     }
 
     private Address mapToAddress(AddressDto addressDto) {
