@@ -1,11 +1,13 @@
 package za.co.burgerfatty.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.co.burgerfatty.dto.CarouselItemDto;
 import za.co.burgerfatty.dto.ProductDto;
+import za.co.burgerfatty.dto.SuccessResponse;
 import za.co.burgerfatty.service.ProductService;
 import java.util.List;
 import java.util.Map;
@@ -58,5 +60,11 @@ public class ProductController {
     public ResponseEntity<Map<String, List<CarouselItemDto>>> getUiData() {
         Map<String, List<CarouselItemDto>> uiDataForTemplate = productService.getUITemplateData();
         return new ResponseEntity<>(uiDataForTemplate, HttpStatus.OK);
+    }
+
+    @PostMapping("place-order")
+    @RolesAllowed("USER")
+    public ResponseEntity<SuccessResponse> customerPlaceOrder(@RequestBody List<ProductDto> orderProducts) {
+        return ResponseEntity.ok().body(productService.placeOrder(orderProducts));
     }
 }

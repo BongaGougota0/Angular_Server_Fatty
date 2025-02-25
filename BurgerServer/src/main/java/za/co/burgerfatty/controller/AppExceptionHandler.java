@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import za.co.burgerfatty.dto.ErrorResponseDto;
+import za.co.burgerfatty.exception.AddressNotFound;
 import za.co.burgerfatty.exception.CategoryNotFound;
 import za.co.burgerfatty.exception.ProductNotFound;
 import za.co.burgerfatty.exception.UserNotFound;
@@ -41,5 +42,13 @@ public class AppExceptionHandler {
         errorResponseDto.setTimestamp(LocalDateTime.now());
         errorResponseDto.setStatusCode(String.valueOf(HttpStatus.NOT_FOUND));
         return ResponseEntity.ok(errorResponseDto);
+    }
+
+    @ExceptionHandler(AddressNotFound.class)
+    public ResponseEntity<ErrorResponseDto> addressNotFound(Exception exception) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto();
+        errorResponseDto.setMessage(exception.getMessage());
+        errorResponseDto.setTimestamp(LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDto);
     }
 }
