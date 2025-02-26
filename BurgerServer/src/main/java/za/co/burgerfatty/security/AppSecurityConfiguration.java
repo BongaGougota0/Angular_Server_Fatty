@@ -36,19 +36,19 @@ public class AppSecurityConfiguration {
                     registry.requestMatchers(
                             "/api/authenticate",
                             "/api/users/register",
-                            "/api/users/ui-data",
-                            "/api/products/**").permitAll();
+                            "/api/products/ui-data",
+                            "/api/products/{id:[\\d]+}",
+                            "/api/products/all",
+                            "/api/products/category**",
+                            "/api/products/store-categories").permitAll();
                     registry.requestMatchers(
                             "/api/products/post" ,
                             "/api/products/update",
                             "/api/products/patch",
                             "/api/products/delete").hasRole("ADMIN");
                     registry.requestMatchers(
-                            "/api/my-cart",
-                            "/api/my-wishlist",
-                            "/api/products/place-order",
-                            "/api/checkout",
-                            "/api/orders**",
+                            "/api/orders/order",
+                            "/api/orders/all?email=**",
                             "/api/address**").authenticated();
                     registry.anyRequest().authenticated();
                 })

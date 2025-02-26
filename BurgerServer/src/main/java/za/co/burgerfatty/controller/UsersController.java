@@ -1,6 +1,6 @@
 package za.co.burgerfatty.controller;
 
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping(path = "api/users/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsersController {
+    public static String USER_CREATED = "User created";
+    public static String USER_CREATE_FAILED = "Error creating user";
 
     private final BurgerUsersService burgerUsersService;
 
@@ -25,11 +27,11 @@ public class UsersController {
     @PostMapping("register")
     public ResponseEntity<SuccessResponse> registerNewUser(@RequestBody BurgerUser newUser) {
         if(burgerUsersService.createNewUser(newUser)){
-            return new ResponseEntity(new SuccessResponse("New User created", LocalDateTime.now()),
-                    HttpStatusCode.valueOf(200));
+            return new ResponseEntity(new SuccessResponse(USER_CREATED, LocalDateTime.now()),
+                    HttpStatus.CREATED);
         }else{
-            return new ResponseEntity(new SuccessResponse("User already exists", LocalDateTime.now()),
-                    HttpStatusCode.valueOf(403));
+            return new ResponseEntity(new SuccessResponse(USER_CREATE_FAILED, LocalDateTime.now()),
+                    HttpStatus.EXPECTATION_FAILED);
         }
     }
 }

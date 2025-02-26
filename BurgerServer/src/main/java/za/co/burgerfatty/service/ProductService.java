@@ -3,7 +3,6 @@ package za.co.burgerfatty.service;
 import org.springframework.stereotype.Service;
 import za.co.burgerfatty.dto.CarouselItemDto;
 import za.co.burgerfatty.dto.ProductDto;
-import za.co.burgerfatty.dto.SuccessResponse;
 import za.co.burgerfatty.exception.CategoryNotFound;
 import za.co.burgerfatty.exception.ProductNotFound;
 import za.co.burgerfatty.models.Product;
@@ -97,16 +96,6 @@ public class ProductService {
         return new ProductDto(product.getProductId(), product.getCategory().getCategoryName(),
                 product.getName(), product.getDescription(), product.getUnitPrice(),
                 product.getImageUrl(), product.getImageUrl(), 1);
-    }
-
-    public SuccessResponse placeOrder(List<ProductDto> orderProducts){
-        boolean isOrderPlaced = false;
-        if(true){
-            orderProducts.stream().map(productDto -> productDto.getProductName()).forEach(System.out::println);
-            return new SuccessResponse("order_placed", LocalDateTime.now());
-        }else {
-            return new SuccessResponse("error_placing order", LocalDateTime.now());
-        }
     }
 
     private Product updateProduct(Product existingProduct, ProductDto productDto) {

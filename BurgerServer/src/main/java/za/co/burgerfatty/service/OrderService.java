@@ -3,6 +3,8 @@ package za.co.burgerfatty.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.burgerfatty.dto.OrderDto;
+import za.co.burgerfatty.dto.ProductDto;
+import za.co.burgerfatty.models.BurgerUser;
 import za.co.burgerfatty.models.Order;
 import za.co.burgerfatty.repositories.BurgerUserRepo;
 import za.co.burgerfatty.repositories.OrderRepository;
@@ -17,10 +19,20 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final BurgerUserRepo burgerUserRepo;
 
-    public OrderDto createNewOrder(OrderDto orderDto){
-        Order order = createOrderEntity(new Order(), orderDto);
-        orderRepository.save(order);
-        return createOrderDto(order);
+    public OrderDto saveNewOrder(List<ProductDto> products, String userEmail){
+        Order o = new Order();
+        o.setOrderDate(LocalDateTime.now());
+        o.setOrderTotal(products.stream()
+                .mapToDouble(productDto ->
+                        productDto.getProductPrice() * productDto.getProductCount()).sum());
+        o.setOrderItems(products.stream()
+                .map(p -> p.getProductName().concat(" Qty")
+                        .concat(String.valueOf(p.getProductCount())))
+                .collect(Collectors.joining(", ")));
+        Order placedOrder = orderRepository.save(o);
+        BurgerUser user = burgerUserRepo.findUserByEmail(userEmail).get();
+        placedOrder.setUser(user);
+        return createOrderDto(placedOrder);
     }
 
     public List<OrderDto> getUserOrders(String userEmail){
