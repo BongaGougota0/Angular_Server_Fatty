@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
@@ -28,18 +29,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response, FilterChain filterChain) throws IOException,
             ServletException {
         String authHeader = request.getHeader("Authorization");
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // Check for both "bearer" and "Bearer" to be case-insensitive
+        if(authHeader == null || !(authHeader.startsWith("bearer ") || authHeader.startsWith("Bearer "))) {
             filterChain.doFilter(request, response);
             return;
         }
-
-        String token = authHeader.substring("Bearer ".length());
+        // Extract token regardless of case
+        String token = authHeader.startsWith("bearer ") ?
+                authHeader.substring("bearer ".length()) :
+                authHeader.substring("Bearer ".length());
         String username = jwtService.extractUsername(token);
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails.getUsername(),userDetails.getPassword(), userDetails.getAuthorities());
-            authentication.setDetails(authentication);
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
