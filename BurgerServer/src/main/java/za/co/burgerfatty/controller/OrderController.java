@@ -31,9 +31,22 @@ public class OrderController {
     @PostMapping("/order")
     public ResponseEntity<OrderResponseDto> createOrder(@RequestBody List<ProductDto> orderProducts,
                                                         Authentication authentication) {
+        // Verify authentication is not null
+        if (authentication == null) {
+            log.error("Authentication is null");
+            // Handle this case
+            return new ResponseEntity<>(new OrderResponseDto(ORDER_FAILED,
+                    HttpStatus.UNAUTHORIZED.name(), LocalDateTime.now()), HttpStatus.UNAUTHORIZED);
+        }
+
+        // Log authentication details to debug
+        log.debug("Authentication: {}", authentication);
+        log.debug("Authentication principal: {}", authentication.getPrincipal());
+
         String email = authentication.getName();
         log.debug("on method post order request, post products size : {}", orderProducts.size());
         log.debug("Creating order for email: {}", email);
+
         OrderDto orderDto = orderService.saveNewOrder(orderProducts, email);
         if(orderDto == null) {
             OrderResponseDto response = new OrderResponseDto(ORDER_PLACED,

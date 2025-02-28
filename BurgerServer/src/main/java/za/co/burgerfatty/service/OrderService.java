@@ -19,7 +19,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final BurgerUserRepo burgerUserRepo;
 
-    public OrderDto saveNewOrder(List<ProductDto> products, String userEmail){
+    public OrderDto saveNewOrder(List<ProductDto> products, String userEmail) {
+        // Find the user first
+        BurgerUser user = burgerUserRepo.findUserByEmail(userEmail).get();
         Order o = new Order();
         o.setOrderDate(LocalDateTime.now());
         o.setOrderTotal(products.stream()
@@ -29,9 +31,10 @@ public class OrderService {
                 .map(p -> p.getProductName().concat(" Qty")
                         .concat(String.valueOf(p.getProductCount())))
                 .collect(Collectors.joining(", ")));
+        // Set the user BEFORE saving order.
+        o.setUser(user);
         Order placedOrder = orderRepository.save(o);
-        BurgerUser user = burgerUserRepo.findUserByEmail(userEmail).get();
-        placedOrder.setUser(user);
+
         return createOrderDto(placedOrder);
     }
 
